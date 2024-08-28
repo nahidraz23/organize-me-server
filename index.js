@@ -37,6 +37,13 @@ async function run () {
       res.send(result);
     })
 
+    app.get('/event/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)};
+      const result = await eventCollection.findOne(query);
+      res.send(result);
+    })
+
     app.post('/events', async (req, res) => {
       const event = req.body
       // console.log(events)
