@@ -3,7 +3,7 @@ const cors = require('cors')
 require('dotenv').config()
 const port = process.env.PORT || 5300
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 
 // middlewares
 app.use(cors())
@@ -30,7 +30,7 @@ async function run () {
 
     const eventCollection = client
       .db('OrganizeMeDB')
-      .collection('eventCollection')
+      .collection('eventCollection');
 
     app.get('/events', async (req, res) => {
       const result = await eventCollection.find().toArray();
@@ -41,6 +41,13 @@ async function run () {
       const event = req.body
       // console.log(events)
       const result = await eventCollection.insertOne(event)
+      res.send(result)
+    })
+
+    app.delete('/events/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)}
+      const result = await eventCollection.deleteOne(query);
       res.send(result)
     })
 
